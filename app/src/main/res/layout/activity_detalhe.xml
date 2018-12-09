@@ -35,7 +35,7 @@
 
 
         <EditText
-            android:id="@+id/editTextNome"
+            android:id="@+id/editTextNomeContato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></EditText>
         <TextView
@@ -45,7 +45,7 @@
             android:text="@string/fone">
         </TextView>
         <EditText
-            android:id="@+id/editTextFone"
+            android:id="@+id/editTextFoneContato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </EditText>
@@ -56,10 +56,16 @@
             android:text="@string/email" >
         </TextView>
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/editTextEmailContato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </EditText>
+        <Spinner
+            android:id="@+id/spinnerRelacaoContato"
+            android:entries="@array/relacaoContato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 

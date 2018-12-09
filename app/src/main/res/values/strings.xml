@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Agenda</string>
-    <string name="search_hint">Buscar contato</string>
+    <string name="search_hint">Busque os contatos</string>
     <string name="title_activity_detalhe">Novo contato</string>
     <string name="nome_do_contato">Nome do contato</string>
-    <string name="salvar">Salvar</string>
-    <string name="excluir">Excluir</string>
+    <string name="salvar">Salvar contato</string>
+    <string name="excluir">Excluir contato</string>
     <string name="nome">Nome</string>
     <string name="fone">Fone</string>
     <string name="email">Email</string>
@@ -13,6 +13,18 @@
     <string name="contato_adicionado">Contato adicionado</string>
     <string name="contato_alterado">Informações do contato alteradas</string>
     <string name="contato_apagado">Contato removido</string>
+    <string name="tipo_de_contato">Tipo de contato</string>
+    <string name="todos">Todos</string>
+    <string name="amigos">Amigos</string>
+    <string name="fam_lia">Família</string>
+    <string name="outros">Outros</string>
+    <string name="filtrar">Filtrar</string>
+    <string-array name="relacaoContato">
+        <item>Amigo</item>
+        <item>Família</item>
+        <item>Trabalho</item>
+        <item>Outros</item>
+    </string-array>
 </resources>
 
 

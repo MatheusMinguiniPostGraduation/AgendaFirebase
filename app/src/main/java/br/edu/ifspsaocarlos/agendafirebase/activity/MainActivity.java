@@ -21,6 +21,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity{
         if (!searchView.isIconified()) {
 
             searchView.onActionViewCollapsed();
-            updateUI(null);
+            updateUI(null,null);
 
         } else {
             super.onBackPressed();
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity{
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            updateUI(query);
+            updateUI(query,null);
             searchView.clearFocus();
 
         }
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        updateUI(null);
+        updateUI(null,null);
         setupRecyclerView();
 
 
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity{
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.pesqContato).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.ordenarContato).getActionView();
 
         ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
 
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity{
 
                 searchView.setQuery("", false);
 
-                updateUI(null);
+                updateUI(null,null);
 
             }
         });
@@ -212,32 +213,49 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    private void updateUI(String nomeContato)
+    private void updateUI(String nomeContato, String tipoContato)
     {
-
-        if (nomeContato==null) {
-             query= databaseReference.orderByChild("nome");
-             options = new FirebaseRecyclerOptions.Builder<Contato>().setQuery(query, Contato.class).build();
-
+        if (nomeContato==null){
+            if (tipoContato != null && nomeContato == null) {
+                query = databaseReference.orderByChild("tipoContato").equalTo(tipoContato);
+            }
+            else if (nomeContato == null && tipoContato == null) {
+                query = databaseReference.orderByChild("nome");
+            }
+            else {
+                query = databaseReference.orderByChild("nome").startAt(nomeContato);
+            }
+            options = new FirebaseRecyclerOptions.Builder<Contato>().setQuery(query, Contato.class).build();
             adapter = new ContatoAdapter(options);
             recyclerView.setAdapter(adapter);
             adapter.startListening();
 
-
             empty.setText(getResources().getString(R.string.lista_vazia));
             fab.show();
         }
-        else {
-
-
-             //EXERCICIO: insira aqui o código para buscar somente os contatos que atendam
-            //           ao criterio de busca digitado pelo usuário na SearchView.
-
-
-
-        }
-
      }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filtroTodos:
+                updateUI(null, null);
+                return true;
+            case R.id.filtroAmigos:
+                updateUI(null, "1");
+                return true;
+            case R.id.filtroFamilia:
+                updateUI(null, "2");
+                return true;
+            case R.id.filtroOutros:
+                updateUI(null, "3");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     private void setupRecyclerView() {
 
@@ -319,6 +337,8 @@ public class MainActivity extends AppCompatActivity{
         adapter.stopListening();
 
     }
+
+
 
 
 }

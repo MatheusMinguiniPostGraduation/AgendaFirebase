@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,8 +21,8 @@ import br.edu.ifspsaocarlos.agendafirebase.R;
 
 
 public class DetalheActivity extends AppCompatActivity {
-    private Contato c;
-
+    private Contato contato;
+    private Spinner relacaoContatoSpinner;
     private DatabaseReference databaseReference;
     String FirebaseID;
 
@@ -29,11 +30,11 @@ public class DetalheActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
+        setSupportActionBar(toolbar);
+        relacaoContatoSpinner = findViewById(R.id.spinnerRelacaoContato);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         if (getIntent().hasExtra("FirebaseID")) {
@@ -45,20 +46,21 @@ public class DetalheActivity extends AppCompatActivity {
 
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    c = snapshot.getValue(Contato.class);
+                    contato = snapshot.getValue(Contato.class);
 
-                    if (c != null) {
-                        EditText nameText = (EditText) findViewById(R.id.editTextNome);
-                        nameText.setText(c.getNome());
-
-
-                        EditText foneText = (EditText) findViewById(R.id.editTextFone);
-                        foneText.setText(c.getFone());
+                    if (contato != null) {
+                        EditText nameText = (EditText) findViewById(R.id.editTextNomeContato);
+                        nameText.setText(contato.getNome());
 
 
-                        EditText emailText = (EditText) findViewById(R.id.editTextEmail);
-                        emailText.setText(c.getEmail());
+                        EditText foneText = (EditText) findViewById(R.id.editTextFoneContato);
+                        foneText.setText(contato.getFone());
 
+
+                        EditText emailText = (EditText) findViewById(R.id.editTextEmailContato);
+                        emailText.setText(contato.getEmail());
+
+                        relacaoContatoSpinner.setSelection(Integer.valueOf(contato.getTipoContato()));
                     }
                 }
 
@@ -110,26 +112,28 @@ public class DetalheActivity extends AppCompatActivity {
 
     private void salvar()
     {
-        String name = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
-        String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
-        String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
+        String name = ((EditText) findViewById(R.id.editTextNomeContato)).getText().toString();
+        String fone = ((EditText) findViewById(R.id.editTextFoneContato)).getText().toString();
+        String email = ((EditText) findViewById(R.id.editTextEmailContato)).getText().toString();
+        Integer tipoContato = relacaoContatoSpinner.getSelectedItemPosition();
 
-        if (c==null) {
-            c = new Contato();
+        if (contato==null) {
+            contato = new Contato();
 
-            c.setNome(name);
-            c.setFone(fone);
-            c.setEmail(email);
-            databaseReference.push().setValue(c);
+            contato.setNome(name);
+            contato.setFone(fone);
+            contato.setEmail(email);
+            contato.setTipoContato(tipoContato.toString());
+            databaseReference.push().setValue(contato);
 
         }
         else
         {
-            c.setNome(name);
-            c.setFone(fone);
-            c.setEmail(email);
-
-            databaseReference.child(FirebaseID).setValue(c);
+            contato.setNome(name);
+            contato.setFone(fone);
+            contato.setEmail(email);
+            contato.setTipoContato(tipoContato.toString());
+            databaseReference.child(FirebaseID).setValue(contato);
 
 
         }
